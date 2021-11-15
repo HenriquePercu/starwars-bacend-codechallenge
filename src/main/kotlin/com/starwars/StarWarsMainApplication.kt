@@ -1,5 +1,4 @@
-package main
-
+package com.starwars
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
