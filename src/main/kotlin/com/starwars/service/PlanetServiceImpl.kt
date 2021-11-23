@@ -16,4 +16,9 @@ class PlanetServiceImpl(
 
         return Planet(planetModel.id_planet, planetModel.name, planetModel.weather, planetModel.terrain, "")
     }
+
+    override fun listAll(): List<Planet> {
+        // TODO return movieApparitions
+        return planetRepository.findAll().map { Planet(it.id_planet, it.name, it.weather, it.terrain, "") }
+    }
 }

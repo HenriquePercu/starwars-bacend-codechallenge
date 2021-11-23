@@ -14,7 +14,6 @@ class PlanetController(
     private val planetService: PlanetService
 
 ) {
-    // TODO encapsula response em Status Code HTTP
     // TODO criar classe pra interceptar excecoes
 
     @PostMapping("/")
@@ -23,18 +22,18 @@ class PlanetController(
     }
 
     @GetMapping("/")
-    fun getPlanets(): List<PlanetRequest> {
-        return arrayListOf(PlanetRequest(0,"", "", "", ""))
+    fun getPlanets(): ResponseEntity<List<PlanetRequest>> {
+        return ResponseEntity(planetService.listAll().map { it.toPlanetRequest() }, HttpStatus.OK)
     }
 
     @GetMapping("/{planetName}")
     fun getPlanetsByName(@PathVariable planetName: String): PlanetRequest {
-        return PlanetRequest(0,"", "", "", "")
+        return PlanetRequest(0, "", "", "", "")
     }
 
     @GetMapping("/{planetId}")
     fun getPlanetsByName(@PathVariable planetId: Int): PlanetRequest {
-        return PlanetRequest(0,"", "", "", "")
+        return PlanetRequest(0, "", "", "", "")
     }
 
     @DeleteMapping("/{planetId}")

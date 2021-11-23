@@ -8,4 +8,6 @@ interface PlanetService {
 
     fun create(planet: Planet): Planet
 
+    fun listAll(): List<Planet>
+
 }
