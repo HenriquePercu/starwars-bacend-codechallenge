@@ -4,6 +4,8 @@ import com.starwars.model.PlanetRequest
 import com.starwars.model.toPlanet
 import com.starwars.model.toPlanetRequest
 import com.starwars.service.PlanetService
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -12,13 +14,12 @@ class PlanetController(
     private val planetService: PlanetService
 
 ) {
-    // colocar para retornar o id da criaçaõ
     // TODO encapsula response em Status Code HTTP
     // TODO criar classe pra interceptar excecoes
 
     @PostMapping("/")
-    fun createPlanet(@RequestBody planet: PlanetRequest): PlanetRequest {
-        return planetService.create(planet.toPlanet()).toPlanetRequest()
+    fun createPlanet(@RequestBody planet: PlanetRequest): ResponseEntity<PlanetRequest> {
+        return ResponseEntity(planetService.create(planet.toPlanet()).toPlanetRequest(), HttpStatus.CREATED)
     }
 
     @GetMapping("/")
