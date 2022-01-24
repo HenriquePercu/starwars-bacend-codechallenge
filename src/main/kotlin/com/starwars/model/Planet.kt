@@ -7,7 +7,7 @@ data class Planet(
     val name: String,
     val weather: String,
     val terrain: String,
-    val movieApparitions: String ?= null
+    val movieApparitions: Int ?= null
 ){}
 
 fun Planet.toPlanetModel() = PlanetModel(

@@ -5,7 +5,7 @@ data class PlanetRequest(
     val name: String,
     val weather: String,
     val terrain: String,
-    val movieApparitions: String? = null
+    val movieApparitions: Int? = null
 ){}
 
 fun PlanetRequest.toPlanet() = Planet(

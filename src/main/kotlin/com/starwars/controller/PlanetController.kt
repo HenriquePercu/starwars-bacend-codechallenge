@@ -26,19 +26,20 @@ class PlanetController(
         return ResponseEntity(planetService.listAll().map { it.toPlanetRequest() }, HttpStatus.OK)
     }
 
-    @GetMapping("/{planetName}")
-    fun getPlanetsByName(@PathVariable planetName: String): PlanetRequest {
-        return PlanetRequest(0, "", "", "", "")
+    @GetMapping("")
+    fun getPlanetsByName(@RequestParam planetName: String): ResponseEntity<PlanetRequest> {
+        return ResponseEntity(planetService.findByName(planetName).toPlanetRequest(), HttpStatus.OK)
     }
 
     @GetMapping("/{planetId}")
-    fun getPlanetsByName(@PathVariable planetId: Int): PlanetRequest {
-        return PlanetRequest(0, "", "", "", "")
+    fun getPlanetsById(@PathVariable planetId: Int): ResponseEntity<PlanetRequest> {
+        return ResponseEntity(planetService.findById(planetId).toPlanetRequest(), HttpStatus.OK)
     }
 
     @DeleteMapping("/{planetId}")
-    fun deletePlanetById(@PathVariable planetId: Int) {
-
+    fun deletePlanetById(@PathVariable planetId: Int): ResponseEntity<HttpStatus> {
+        planetService.delete(planetId)
+        return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
 }
