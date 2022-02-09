@@ -14,7 +14,7 @@ class PlanetController(
     private val planetService: PlanetService
 
 ) {
-    // TODO criar classe pra interceptar excecoes
+    // Tratamento de exceção para deleção
 
     @PostMapping("/")
     fun createPlanet(@RequestBody planet: PlanetRequest): ResponseEntity<PlanetRequest> {

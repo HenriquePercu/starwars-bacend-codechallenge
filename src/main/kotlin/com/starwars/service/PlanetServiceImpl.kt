@@ -1,10 +1,12 @@
 package com.starwars.service
 
 import com.starwars.client.SwapiClient
+import com.starwars.exception.IllegalPlanetNameException
 import com.starwars.exception.PlanetNotFoundException
 import com.starwars.model.Planet
 import com.starwars.model.toPlanetModel
 import com.starwars.repository.PlanetRepository
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import java.util.NoSuchElementException
 import java.util.function.Consumer
@@ -18,12 +20,16 @@ class PlanetServiceImpl(
     override fun create(planet: Planet): Planet {
         val planetModel = planetRepository.save(planet.toPlanetModel())
 
+        val quantityFilms =
+            swapiClient.getPlanetByName(planetModel.name).takeIf { planetsSwapi -> planetsSwapi.count > 0 }
+                ?: throw IllegalPlanetNameException("Não foi encontrado um planeta com este nome")
+
         return Planet(
             planetModel.id_planet,
             planetModel.name,
             planetModel.weather,
             planetModel.terrain,
-            swapiClient.getPlanetByName(planetModel.name).results[0].films.size
+            quantityFilms.results[0].films.size
         )
     }
 
@@ -48,11 +54,22 @@ class PlanetServiceImpl(
                 it.terrain,
                 swapiClient.getPlanetByName(it.name).results[0].films.size
             )
-        }.takeIf { it.isNotEmpty() }?.first() ?: throw PlanetNotFoundException("Planeta não encontrado com este nome")
+        }.takeIf { it.isNotEmpty() }?.first()
+            ?: throw PlanetNotFoundException("Planeta não encontrado com este nome em nosso banco de dados")
     }
 
     override fun delete(id: Int) {
-        planetRepository.deleteById(id)
+        runCatching {
+            planetRepository.deleteById(id)
+        }.onFailure { exception ->
+            when (exception) {
+                is EmptyResultDataAccessException -> {
+                    throw PlanetNotFoundException("Planeta não encontrado com este nome em nosso banco de dados")
+                }
+                else -> throw Exception()
+            }
+        }
+
     }
 
     override fun findById(id: Int): Planet {

@@ -20,4 +20,24 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
         )
     }
 
+    @ExceptionHandler(value = [(IllegalPlanetNameException::class)])
+    fun handleIllegalPlanetNameException(exception: IllegalPlanetNameException): ResponseEntity<ErrorDetailResponse> {
+        return ResponseEntity(
+            ErrorDetailResponse(
+                LocalDateTime.now(),
+                exception.message
+            ), HttpStatus.UNPROCESSABLE_ENTITY
+        )
+    }
+
+    @ExceptionHandler(value = [(Exception::class)])
+    fun handleIllegalPlanetNameException(exception: Exception): ResponseEntity<ErrorDetailResponse> {
+        return ResponseEntity(
+            ErrorDetailResponse(
+                LocalDateTime.now(),
+                "Ops! Ocorreu um erro em nosso sistema"
+            ), HttpStatus.INTERNAL_SERVER_ERROR
+        )
+    }
+
 }
